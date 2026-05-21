@@ -42,14 +42,14 @@ async def get_weather(city: str) -> list:
         weather_codes = daily.get("weathercode", [])
         
         def code_to_condition(code):
-            if code == 0: return "Clear sky"
-            if code in [1, 2, 3]: return "Partly cloudy"
-            if code in [45, 48]: return "Fog"
-            if code in [51, 53, 55, 56, 57]: return "Drizzle"
-            if code in [61, 63, 65, 66, 67]: return "Rain"
-            if code in [71, 73, 75, 77]: return "Snow"
-            if code in [80, 81, 82]: return "Rain showers"
-            if code in [95, 96, 99]: return "Thunderstorm"
+            if code == 0: return "🌤️ Clear sky"
+            if code in [1, 2, 3]: return "🌥️ Partly cloudy"
+            if code in [45, 48]: return "🌫️ Fog"
+            if code in [51, 53, 55, 56, 57]: return "🌧️ Drizzle"
+            if code in [61, 63, 65, 66, 67]: return "🌨️ Rain"
+            if code in [71, 73, 75, 77]: return "🌨️ Snow"
+            if code in [80, 81, 82]: return "🌨️ Rain showers"
+            if code in [95, 96, 99]: return "⛈️ Thunderstorm"
             return "Unknown"
 
         for i in range(min(7, len(times))):

@@ -34,7 +34,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- Hero Section ---
-st.markdown("<h1>Atlas</h1>", unsafe_allow_html=True)
+st.markdown("<h1>Atlas 🌏</h1>", unsafe_allow_html=True)
 st.markdown("<p class='subtitle'>An intelligent travel assistant that combines destination insights, weather forecasting, and visual exploration through an agentic workflow.</p>", unsafe_allow_html=True)
 
 # Initialize session state for thread_id to persist LangGraph memory
@@ -70,7 +70,7 @@ if explore_btn:
                 st.divider()
                 
                 # --- Destination Header ---
-                st.markdown(f"## Destination: {city}")
+                st.markdown(f"## 📍 Destination: {city}")
                 st.caption(f"Knowledge Source: **{source.replace('_', ' ').title()}**")
                 
                 # --- Summary Card ---
@@ -83,7 +83,7 @@ if explore_btn:
                 c1, c2 = st.columns([1, 1], gap="large")
                 
                 with c1:
-                    st.subheader("7-Day Forecast")
+                    st.subheader("⛅ 7-Day Forecast")
                     if weather and weather[0].get("day") != "N/A":
                         df = pd.DataFrame(weather)
                         fig = px.line(df, x="day", y="temperature", 
@@ -97,10 +97,10 @@ if explore_btn:
                         st.warning("Weather data is currently unavailable.")
                         
                 with c2:
-                    st.subheader("Highlights")
+                    st.subheader("📸 Highlights")
                     if images:
                         for img in images:
-                            st.image(img, use_container_width=True, caption=f"Vistas of {city}")
+                            st.image(img, use_container_width=True, caption=f"View of {city}")
                     else:
                         st.warning("No images found for this city.")
                         

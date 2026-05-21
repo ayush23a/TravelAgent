@@ -12,31 +12,42 @@ from langchain_core.output_parsers import JsonOutputParser
 
 def extract_city_node(state: TravelState) -> Dict[str, Any]:
     query = state.get("user_query", "")
+    previous_city = state.get("city", "")
+    
     llm = get_groq()
     if not llm:
         llm = get_gemini() 
         
     class CityExtract(BaseModel):
-        city: str = Field(description="The name of the city mentioned in the query")
+        city: str = Field(description="The name of the destination city")
     
     parser = JsonOutputParser(pydantic_object=CityExtract)
     prompt = PromptTemplate(
-        template="Extract the city from the following user query.\n{format_instructions}\nQuery: {query}\n",
-        input_variables=["query"],
+        template="""You are a travel routing agent.
+                    Extract the destination city from the user query.
+                    The user's previous city context was: '{previous_city}'.
+                    If the query does NOT mention a new city (e.g., 'what about next week?', 'more info'), you MUST return '{previous_city}'.
+                    If a NEW city is explicitly mentioned, return the NEW city.
+                    {format_instructions}
+                    Query: {query}
+                    """,
+        input_variables=["query", "previous_city"],
         partial_variables={"format_instructions": parser.get_format_instructions()},
     )
     
     chain = prompt | llm | parser
     
     try:
-        result = chain.invoke({"query": query})
-        return {"city": result.get("city", "").strip()}
+        result = chain.invoke({"query": query, "previous_city": previous_city})
+        extracted_city = result.get("city", "").strip()
+        
+        if not extracted_city or extracted_city.lower() in ["none", "null", "unknown"]:
+            return {"city": previous_city}
+            
+        return {"city": extracted_city}
     except Exception as e:
-        # Fallback if extraction fails
         print(f"Extraction failed: {e}")
-        # Naive fallback
-        words = query.split()
-        return {"city": words[-1] if words else ""}
+        return {"city": previous_city if previous_city else query.split()[-1]}
 
 def retrieval_node(state: TravelState) -> Dict[str, Any]:
     city = state.get("city", "")
