@@ -1,0 +1,11 @@
+langgraph
+langchain
+python-dotenv
+fastapi
+uvicorn
+langchain-groq
+langchain-google-genai
+streamlit
+requests
+langchain-chroma
+langchain-huggingface
